@@ -92,7 +92,7 @@ const JobPage = () => {
       {/* Add Job Button */}
       <button
         onClick={() => setShowAddJobPopup(true)}
-        className="bg-blue-500 text-white py-2 px-4 rounded mb-6 flex items-center"
+        className="bg-blue-500 text-white py-2 px-4 hover:bg-indigo-500 hover:scale-105 hover:shadow-md rounded mb-6 flex items-center"
       >
         <FaPlus className="mr-2" />
         Add New Job
@@ -101,7 +101,7 @@ const JobPage = () => {
       {/* Job Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {jobs.map((job, index) => (
-          <div key={index} className="border p-4 rounded-lg shadow-md">
+          <div key={index} className="border p-4 hover:shadow-2xl transform transition duration-300 hover:scale-105 border border-gray-200 rounded-lg shadow-md">
             <h2 className="text-xl font-semibold">{job.jobTitle}</h2> {/* Job title now visible */}
             <p className="text-gray-600">{job.jobDescription}</p>
             <p className={`mt-2 font-medium ${job.assessment ? 'text-green-500' : 'text-red-500'}`}>
@@ -112,19 +112,19 @@ const JobPage = () => {
             <div className="flex space-x-3 mt-4 border-t pt-4">
               <button
                 onClick={() => handleViewCandidate(job.jobTitle)}  // Pass the jobId dynamically
-                className="bg-blue-500 text-white py-2 px-4 rounded flex items-center"
+                className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-500 hover:scale-105 hover:shadow-md flex items-center"
               >
                 <FaEye className="mr-1" /> View Candidates
               </button>
               <button
                 onClick={() => handleEditJob(index)}
-                className="bg-yellow-500 text-white py-2 px-4 rounded flex items-center"
+                className="bg-yellow-500 text-white py-2 px-4 hover:bg-yellow-500 hover:scale-105 hover:shadow-md rounded flex items-center"
               >
                 <FaEdit className="mr-1" /> Edit
               </button>
               <button
                 onClick={() => handleDeleteJob(index)}
-                className="bg-red-500 text-white py-2 px-4 rounded flex items-center"
+                className="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-500 hover:scale-105 hover:shadow-md flex items-center"
               >
                 <FaTrashAlt className="mr-1" /> Delete
               </button>
@@ -135,8 +135,8 @@ const JobPage = () => {
 
       {/* Add/Edit Job Popup */}
       {showAddJobPopup && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-          <div className="bg-white p-8 rounded-lg w-full max-w-2xl overflow-y-auto" style={{ maxHeight: '80vh', overflowY: 'scroll' }}>
+        <div className="fixed inset-0 bg-black  bg-opacity-50 flex justify-center items-center">
+          <div className="bg-white p-8 hover:shadow-2xl transform transition duration-300 hover:scale-105 border border-gray-200 rounded-lg w-full max-w-2xl overflow-y-auto" style={{ maxHeight: '80vh', overflowY: 'scroll' }}>
             <h2 className="text-2xl font-semibold mb-4">{editingIndex !== null ? 'Edit Job' : 'Add Job'}</h2>
             <form>
               {/* Job Title */}
@@ -170,7 +170,7 @@ const JobPage = () => {
 
               {/* Add Assessment Option */}
               <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700">Add Assessment?</label>
+                <label className="block text-sm font-medium  text-gray-700">Add Assessment?</label>
                 <div className="flex items-center space-x-4">
                   <label className="flex items-center">
                     <input
@@ -249,7 +249,7 @@ const JobPage = () => {
                   <button
                     type="button"
                     onClick={handleAddQuestion}
-                    className="bg-blue-500 text-white py-2 px-4 rounded mt-4"
+                    className="bg-blue-500 text-white hover:bg-blue-500 hover:scale-105 hover:shadow-md py-2 px-4 rounded mt-4"
                   >
                     Add Another Question
                   </button>
@@ -261,14 +261,14 @@ const JobPage = () => {
                 <button
                   type="button"
                   onClick={() => setShowAddJobPopup(false)}
-                  className="bg-gray-500 text-white py-2 px-4 rounded"
+                  className="bg-gray-500 text-white hover:bg-gray-500 hover:scale-105 hover:shadow-md py-2 px-4 rounded"
                 >
                   Cancel
                 </button>
                 <button
                   type="button"
                   onClick={handleAddJob}
-                  className="bg-blue-500 text-white py-2 px-4 rounded"
+                  className="bg-blue-500 text-white hover:bg-blue-500 hover:scale-105 hover:shadow-md py-2 px-4 rounded"
                 >
                   {editingIndex !== null ? "Update Job" : "Add Job"}
                 </button>
@@ -281,4 +281,4 @@ const JobPage = () => {
   );
 };
 
-export default JobPage;
+export default JobPage; 
