@@ -130,7 +130,7 @@ const CandidateDetailPage = () => {
                   </div>
                   
                   {/* Conditionally display the score if it exists */}
-                  {candidate.score && (
+                  {typeof candidate.score === 'number' && (
                     <div className="flex items-center text-lg text-gray-700">
                       <FaCheckCircle className="mr-3 text-xl text-green-500" />
                       <p><strong>Score:</strong> {candidate.score}</p>
