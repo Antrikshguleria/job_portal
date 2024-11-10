@@ -37,8 +37,10 @@ const CandidatePage = () => {
     });
   };
 
-  const handleApply = () => {
-    // Validation
+  const validateInputs = () => {
+    const emailRegex = /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/;
+    const resumeLinkRegex = /^(https?:\/\/)/;
+
     if (
       !applicantData.name ||
       !applicantData.age ||
@@ -47,8 +49,24 @@ const CandidatePage = () => {
       !applicantData.experience
     ) {
       alert("All fields are required!");
-      return;
+      return false;
     }
+
+    if (!emailRegex.test(applicantData.email)) {
+      alert("Please enter a valid email address (e.g., example@domain.com).");
+      return false;
+    }
+
+    if (!resumeLinkRegex.test(applicantData.resumeLink)) {
+      alert("Resume link must start with 'http://' or 'https://'.");
+      return false;
+    }
+
+    return true;
+  };
+
+  const handleApply = () => {
+    if (!validateInputs()) return;
 
     // Store the applicant's details in localStorage
     const candidates = JSON.parse(localStorage.getItem("candidates")) || [];
@@ -112,9 +130,12 @@ const CandidatePage = () => {
           const assessmentCompleted = checkIfAssessmentCompleted(job.jobTitle);
 
           return (
-            <div key={index} className="border p-4 rounded-lg shadow-md">
-              <h2 className="text-xl font-semibold">{job.jobTitle}</h2>
-              <p className="text-gray-600">{job.jobDescription}</p>
+            <div
+              key={index}
+              className="border p-6 rounded-lg shadow-lg hover:shadow-2xl transition-shadow duration-500 ease-in-out"
+            >
+              <h2 className="text-xl font-semibold text-gray-900">{job.jobTitle}</h2>
+              <p className="text-gray-600 mt-2">{job.jobDescription}</p>
               <p className={`mt-2 font-medium ${job.assessment ? "text-green-500" : "text-red-500"}`}>
                 {job.assessment ? "Assessment: Required" : "No Assessment"}
               </p>
@@ -122,7 +143,7 @@ const CandidatePage = () => {
               <div className="flex items-center space-x-4 mt-4">
                 {job.status === "Application Submitted" ? (
                   <button
-                    className="bg-gray-500 text-white py-2 px-4 rounded flex items-center cursor-not-allowed"
+                    className="bg-gray-500 text-white py-2 px-6 rounded-lg flex items-center cursor-not-allowed opacity-60"
                     disabled
                   >
                     Application Submitted
@@ -130,7 +151,7 @@ const CandidatePage = () => {
                 ) : (
                   <button
                     onClick={() => handleApplyClick(job)}
-                    className="bg-blue-500 text-white py-2 px-4 rounded flex items-center"
+                    className="bg-blue-500 text-white py-2 px-6 rounded-lg flex items-center hover:bg-blue-600 transition duration-300 transform hover:scale-105"
                   >
                     Apply
                   </button>
@@ -139,14 +160,14 @@ const CandidatePage = () => {
                 {job.status === "Application Submitted" && job.assessment && !assessmentCompleted && (
                   <button
                     onClick={() => handleLaunchAssessment(job)}
-                    className="bg-yellow-500 text-white py-2 px-4 rounded flex items-center"
+                    className="bg-yellow-500 text-white py-2 px-6 rounded-lg flex items-center hover:bg-yellow-600 transition duration-300 transform hover:scale-105"
                   >
                     Launch Assessment
                   </button>
                 )}
 
                 {assessmentCompleted && (
-                  <div className="bg-green-500 text-white py-2 px-4 rounded flex items-center">
+                  <div className="bg-green-500 text-white py-2 px-6 rounded-lg flex items-center">
                     Assessment Completed
                   </div>
                 )}
@@ -165,7 +186,7 @@ const CandidatePage = () => {
       {showApplyPopup && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
           <div className="bg-white p-8 rounded-lg w-full max-w-md">
-            <h2 className="text-2xl font-semibold mb-4">Apply for {selectedJob.jobTitle}</h2>
+            <h2 className="text-2xl font-semibold mb-4 text-gray-800">Apply for {selectedJob.jobTitle}</h2>
             <form>
               <div className="mb-4">
                 <label htmlFor="name" className="block text-sm font-medium text-gray-700">
@@ -177,7 +198,7 @@ const CandidatePage = () => {
                   name="name"
                   value={applicantData.name}
                   onChange={handleInputChange}
-                  className="w-full px-4 py-2 mt-2 border rounded-lg"
+                  className="w-full px-4 py-2 mt-2 border rounded-lg focus:ring-2 focus:ring-blue-500 transition duration-200"
                   required
                 />
               </div>
@@ -192,7 +213,7 @@ const CandidatePage = () => {
                   name="age"
                   value={applicantData.age}
                   onChange={handleInputChange}
-                  className="w-full px-4 py-2 mt-2 border rounded-lg"
+                  className="w-full px-4 py-2 mt-2 border rounded-lg focus:ring-2 focus:ring-blue-500 transition duration-200"
                   required
                 />
               </div>
@@ -207,7 +228,7 @@ const CandidatePage = () => {
                   name="email"
                   value={applicantData.email}
                   onChange={handleInputChange}
-                  className="w-full px-4 py-2 mt-2 border rounded-lg"
+                  className="w-full px-4 py-2 mt-2 border rounded-lg focus:ring-2 focus:ring-blue-500 transition duration-200"
                   required
                 />
               </div>
@@ -222,40 +243,40 @@ const CandidatePage = () => {
                   name="resumeLink"
                   value={applicantData.resumeLink}
                   onChange={handleInputChange}
-                  className="w-full px-4 py-2 mt-2 border rounded-lg"
+                  className="w-full px-4 py-2 mt-2 border rounded-lg focus:ring-2 focus:ring-blue-500 transition duration-200"
                   required
                 />
               </div>
 
               <div className="mb-4">
                 <label htmlFor="experience" className="block text-sm font-medium text-gray-700">
-                  Experience
+                  Experience (in years)
                 </label>
                 <input
-                  type="text"
+                  type="number"
                   id="experience"
                   name="experience"
                   value={applicantData.experience}
                   onChange={handleInputChange}
-                  className="w-full px-4 py-2 mt-2 border rounded-lg"
+                  className="w-full px-4 py-2 mt-2 border rounded-lg focus:ring-2 focus:ring-blue-500 transition duration-200"
                   required
                 />
               </div>
 
-              <div className="flex justify-between">
+              <div className="flex space-x-4">
                 <button
                   type="button"
                   onClick={handleCancel}
-                  className="bg-gray-500 text-white py-2 px-4 rounded"
+                  className="bg-gray-500 text-white py-2 px-4 rounded-lg hover:bg-gray-600 transition duration-300"
                 >
                   Cancel
                 </button>
                 <button
                   type="button"
                   onClick={handleApply}
-                  className="bg-blue-500 text-white py-2 px-4 rounded"
+                  className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition duration-300"
                 >
-                  Apply
+                  Submit Application
                 </button>
               </div>
             </form>
