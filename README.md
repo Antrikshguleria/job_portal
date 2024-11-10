@@ -1,5 +1,7 @@
 Job Portal
 
+LINK -- https://job-portal-hazel-ten.vercel.app
+
 A fully functional Job Portal application created using React and React Router. The project enables users to manage job listings, post new jobs, view candidate applications, and conduct assessments. All data is stored locally on the browser using localStorage, allowing users to view and interact with the information on the client side without any backend or server setup.
 
 Table of Contents
