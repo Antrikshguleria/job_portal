@@ -5,16 +5,14 @@ const AssessmentPage = () => {
   const { jobTitle } = useParams();
   const [job, setJob] = useState(null);
   const [answers, setAnswers] = useState({});
-  const [score, setScore] = useState(null); // Start with null to hide score until submission
+  const [score, setScore] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Retrieve job data from localStorage
     const storedJobs = JSON.parse(localStorage.getItem("jobs")) || [];
     const foundJob = storedJobs.find((job) => job.jobTitle === jobTitle);
 
     if (!foundJob || !Array.isArray(foundJob.questions) || foundJob.questions.length === 0) {
-      // Navigate back if questions are missing or invalid
       navigate("/job");
       return;
     }
@@ -25,24 +23,21 @@ const AssessmentPage = () => {
   const handleAnswerChange = (questionIndex, selectedIndex) => {
     setAnswers((prevAnswers) => ({
       ...prevAnswers,
-      [questionIndex]: selectedIndex, // Store the selected index (0, 1, 2, 3)
+      [questionIndex]: selectedIndex,
     }));
   };
 
   const handleSubmit = () => {
     let totalScore = 0;
 
-    // Compare answers and calculate score only when submitting
     job.questions.forEach((question, index) => {
-      // Check if the selected answer (index) matches the correct answer index
       if (answers[index] !== undefined && answers[index].toString() === question.correctAnswer) {
         totalScore++;
       }
     });
 
-    setScore(totalScore); // Set the final score
+    setScore(totalScore);
 
-    // Update the candidate's completedAssessment status in localStorage
     const candidates = JSON.parse(localStorage.getItem("candidates")) || [];
     const updatedCandidates = candidates.map((candidate) =>
       candidate.jobTitle === jobTitle
@@ -52,54 +47,52 @@ const AssessmentPage = () => {
     localStorage.setItem("candidates", JSON.stringify(updatedCandidates));
 
     alert(`You scored ${totalScore} out of ${job.questions.length}`);
-    navigate("/job"); // Redirect back to job listing after submission
+    navigate("/job");
   };
 
-  if (!job) return <div>Loading...</div>; // Loading state
+  if (!job) return <div>Loading...</div>;
 
   return (
-    <div className="container mx-auto p-6">
-      <h1 className="text-3xl font-bold mb-6">Assessment for {job.jobTitle}</h1>
+    <div className="container mx-auto p-6 max-w-2xl">
+      <h1 className="text-3xl font-extrabold text-center text-indigo-600 mb-8">Assessment for {job.jobTitle}</h1>
 
-      <form>
+      <form className="space-y-8">
         {job.questions && job.questions.length > 0 ? (
           job.questions.map((question, index) => (
-            <div key={index} className="mb-6">
-              {/* Display the question text correctly */}
-              <p className="text-lg font-semibold mb-2">{question.question}</p>
-              <div className="flex flex-col">
+            <div key={index} className="p-6 bg-white shadow-lg rounded-lg border border-gray-200">
+              <p className="text-lg font-semibold text-gray-800 mb-4">{question.question}</p>
+              <div className="space-y-3">
                 {question.options.map((option, i) => (
-                  <label key={i} className="flex items-center space-x-2">
+                  <label key={i} className="flex items-center space-x-3 p-2 bg-gray-50 rounded-lg hover:bg-gray-100 transition duration-200">
                     <input
                       type="radio"
                       name={`question-${index}`}
-                      value={i} // Store the index of the selected option
-                      checked={answers[index] === i} // Compare against the stored index
-                      onChange={() => handleAnswerChange(index, i)} // Store the index of the selected answer
-                      className="mr-2"
+                      value={i}
+                      checked={answers[index] === i}
+                      onChange={() => handleAnswerChange(index, i)}
+                      className="text-indigo-500 focus:ring-2 focus:ring-indigo-400"
                     />
-                    <span>{option}</span>
+                    <span className="text-gray-700">{option}</span>
                   </label>
                 ))}
               </div>
             </div>
           ))
         ) : (
-          <p>No assessment available for this job.</p>
+          <p className="text-center text-gray-500">No assessment available for this job.</p>
         )}
 
         <button
           type="button"
           onClick={handleSubmit}
-          className="bg-blue-500 text-white py-2 px-4 rounded"
+          className="w-full py-3 mt-6 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 shadow-lg transition duration-300 transform hover:scale-105"
         >
           Submit Assessment
         </button>
       </form>
 
-      {/* Display the score only after submission */}
       {score !== null && (
-        <div className="mt-6 p-4 bg-green-100 text-green-600 rounded">
+        <div className="mt-8 p-4 bg-green-100 text-green-700 text-center font-semibold rounded-lg shadow-md">
           Your score: {score} out of {job.questions.length}
         </div>
       )}
